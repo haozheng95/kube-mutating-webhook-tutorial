@@ -216,7 +216,11 @@ func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.Admissi
 			},
 		}
 	}
-	glog.Infof("Pod ====== %s", pod)
+	volumeMounts := whsvr.sidecarConfig.Containers[0].VolumeMounts
+	glog.Infof("VolumeMounts ===== %s", volumeMounts)
+	rawVolumeMounts := pod.Spec.Containers[0].VolumeMounts
+	pod.Spec.Containers[0].VolumeMounts = append(rawVolumeMounts, volumeMounts...)
+	glog.Infof("Pod ====== %v", pod)
 	glog.Infof("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
 		req.Kind, req.Namespace, req.Name, pod.Name, req.UID, req.Operation, req.UserInfo)
 
