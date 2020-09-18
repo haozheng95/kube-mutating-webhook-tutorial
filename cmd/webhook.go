@@ -131,6 +131,10 @@ func mutationRequired(ignoredList []string, metadata *metav1.ObjectMeta) bool {
 
 func addContainer(target, added []corev1.Container, basePath string) (patch []patchOperation) {
 	first := len(target) == 0
+	temp := []corev1.Container{target[0]}
+	l, _ := json.Marshal(temp)
+	glog.Infof("======= target ====== %s", string(l))
+
 	var value interface{}
 	for _, add := range added {
 		value = add
@@ -210,11 +214,11 @@ func updateAnnotation(target map[string]string, added map[string]string) (patch 
 func createPatch(pod *corev1.Pod, sidecarConfig *Config, annotations map[string]string) ([]byte, error) {
 	var patch []patchOperation
 
-	//patch = append(patch, addContainer(pod.Spec.Containers, sidecarConfig.Containers, "/spec/containers")...)
+	patch = append(patch, addContainer(pod.Spec.Containers, sidecarConfig.Containers, "/spec/containers")...)
 	patch = append(patch, addVolume(pod.Spec.Volumes, sidecarConfig.Volumes, "/spec/volumes")...)
 	patch = append(patch, updateAnnotation(pod.Annotations, annotations)...)
 
-	patch = append(patch, updateContainer(sidecarConfig.Containers)...)
+	//patch = append(patch, updateContainer(sidecarConfig.Containers)...)
 
 	return json.Marshal(patch)
 }
