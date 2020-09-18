@@ -151,17 +151,18 @@ func addContainer(target, added []corev1.Container, basePath string) (patch []pa
 	return patch
 }
 
-func updateContainer(target, added []corev1.Container) (patch []patchOperation) {
+func updateContainer(target, added []corev1.Container, basePath string) (patch []patchOperation) {
 	temp := []corev1.Container{target[0]}
 	l, _ := json.Marshal(temp)
 	glog.Infof("======= target ====== %s", string(l))
+	path := basePath
 
 	//var value interface{}
 
 	//value = added[0]
 	patch = append(patch, patchOperation{
 		Op:   "replace",
-		Path: "/spec/containers/-",
+		Path: path,
 		Value: map[string]string{
 			"name": "abc",
 		},
@@ -220,7 +221,7 @@ func createPatch(pod *corev1.Pod, sidecarConfig *Config, annotations map[string]
 	patch = append(patch, addVolume(pod.Spec.Volumes, sidecarConfig.Volumes, "/spec/volumes")...)
 	patch = append(patch, updateAnnotation(pod.Annotations, annotations)...)
 
-	patch = append(patch, updateContainer(pod.Spec.Containers, sidecarConfig.Containers)...)
+	patch = append(patch, updateContainer(pod.Spec.Containers, sidecarConfig.Containers, "/spec/containers")...)
 
 	return json.Marshal(patch)
 }
