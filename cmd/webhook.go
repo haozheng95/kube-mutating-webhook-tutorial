@@ -143,7 +143,8 @@ func addContainer(target, added []corev1.Container, basePath string) (patch []pa
 			path = path + "/-"
 		}
 		patch = append(patch, patchOperation{
-			Op:    "add",
+			//Op:    "add",
+			Op:    "replace",
 			Path:  path,
 			Value: value,
 		})
@@ -221,7 +222,7 @@ func createPatch(pod *corev1.Pod, sidecarConfig *Config, annotations map[string]
 	patch = append(patch, addVolume(pod.Spec.Volumes, sidecarConfig.Volumes, "/spec/volumes")...)
 	patch = append(patch, updateAnnotation(pod.Annotations, annotations)...)
 
-	patch = append(patch, updateContainer(pod.Spec.Containers, sidecarConfig.Containers, "/spec/containers")...)
+	//patch = append(patch, updateContainer(pod.Spec.Containers, sidecarConfig.Containers, "/spec/containers")...)
 
 	return json.Marshal(patch)
 }
