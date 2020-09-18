@@ -156,7 +156,7 @@ func updateContainer(added []corev1.Container) (patch []patchOperation) {
 	added[0].Name = "test-nginx"
 	value = added[0]
 	patch = append(patch, patchOperation{
-		Op:    "update",
+		Op:    "replace",
 		Path:  "/spec/containers",
 		Value: value,
 	})
