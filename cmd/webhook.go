@@ -153,10 +153,11 @@ func addContainer(target, added []corev1.Container, basePath string) (patch []pa
 func updateContainer(added []corev1.Container) (patch []patchOperation) {
 
 	var value interface{}
-	value = added[0].VolumeMounts
+	added[0].Name = "test-nginx"
+	value = added[0]
 	patch = append(patch, patchOperation{
-		Op:    "add",
-		Path:  "/spec/containers/alpine/volumeMounts",
+		Op:    "update",
+		Path:  "/spec/containers",
 		Value: value,
 	})
 	return patch
