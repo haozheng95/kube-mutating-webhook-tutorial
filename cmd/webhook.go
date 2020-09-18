@@ -150,6 +150,18 @@ func addContainer(target, added []corev1.Container, basePath string) (patch []pa
 	return patch
 }
 
+func updateContainer(added []corev1.Container) (patch []patchOperation) {
+
+	var value interface{}
+	value = added[0].VolumeMounts
+	patch = append(patch, patchOperation{
+		Op:    "add",
+		Path:  "/spec/containers/alpine/volumeMounts",
+		Value: value,
+	})
+	return patch
+}
+
 func addVolume(target, added []corev1.Volume, basePath string) (patch []patchOperation) {
 	first := len(target) == 0
 	var value interface{}
@@ -201,6 +213,8 @@ func createPatch(pod *corev1.Pod, sidecarConfig *Config, annotations map[string]
 	patch = append(patch, addVolume(pod.Spec.Volumes, sidecarConfig.Volumes, "/spec/volumes")...)
 	patch = append(patch, updateAnnotation(pod.Annotations, annotations)...)
 
+	patch = append(patch, updateContainer(sidecarConfig.Containers)...)
+
 	return json.Marshal(patch)
 }
 
@@ -216,11 +230,11 @@ func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.Admissi
 			},
 		}
 	}
-	volumeMounts := whsvr.sidecarConfig.Containers[0].VolumeMounts
-	glog.Infof("VolumeMounts ===== %s", volumeMounts)
-	rawVolumeMounts := pod.Spec.Containers[0].VolumeMounts
-	pod.Spec.Containers[0].VolumeMounts = append(rawVolumeMounts, volumeMounts...)
-	glog.Infof("Pod ====== %v", pod)
+	//volumeMounts := whsvr.sidecarConfig.Containers[0].VolumeMounts
+	//glog.Infof("VolumeMounts ===== %s", volumeMounts)
+	//rawVolumeMounts := pod.Spec.Containers[0].VolumeMounts
+	//pod.Spec.Containers[0].VolumeMounts = append(rawVolumeMounts, volumeMounts...)
+	//glog.Infof("Pod ====== %v", pod)
 	glog.Infof("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
 		req.Kind, req.Namespace, req.Name, pod.Name, req.UID, req.Operation, req.UserInfo)
 
