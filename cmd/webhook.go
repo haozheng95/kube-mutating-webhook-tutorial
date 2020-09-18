@@ -131,9 +131,6 @@ func mutationRequired(ignoredList []string, metadata *metav1.ObjectMeta) bool {
 
 func addContainer(target, added []corev1.Container, basePath string) (patch []patchOperation) {
 	first := len(target) == 0
-	temp := []corev1.Container{target[0]}
-	l, _ := json.Marshal(temp)
-	glog.Infof("======= target ====== %s", string(l))
 
 	var value interface{}
 	for _, add := range added {
@@ -154,15 +151,20 @@ func addContainer(target, added []corev1.Container, basePath string) (patch []pa
 	return patch
 }
 
-func updateContainer(added []corev1.Container) (patch []patchOperation) {
+func updateContainer(target, added []corev1.Container) (patch []patchOperation) {
+	temp := []corev1.Container{target[0]}
+	l, _ := json.Marshal(temp)
+	glog.Infof("======= target ====== %s", string(l))
 
-	var value interface{}
-	added[0].Name = "test-nginx"
-	value = added[0]
+	//var value interface{}
+
+	//value = added[0]
 	patch = append(patch, patchOperation{
-		Op:    "replace",
-		Path:  "/spec/containers",
-		Value: value,
+		Op:   "replace",
+		Path: "/spec/containers/-",
+		Value: map[string]string{
+			"name": "abc",
+		},
 	})
 	return patch
 }
@@ -218,7 +220,7 @@ func createPatch(pod *corev1.Pod, sidecarConfig *Config, annotations map[string]
 	patch = append(patch, addVolume(pod.Spec.Volumes, sidecarConfig.Volumes, "/spec/volumes")...)
 	patch = append(patch, updateAnnotation(pod.Annotations, annotations)...)
 
-	//patch = append(patch, updateContainer(sidecarConfig.Containers)...)
+	patch = append(patch, updateContainer(pod.Spec.Containers, sidecarConfig.Containers)...)
 
 	return json.Marshal(patch)
 }
@@ -235,11 +237,7 @@ func (whsvr *WebhookServer) mutate(ar *v1beta1.AdmissionReview) *v1beta1.Admissi
 			},
 		}
 	}
-	//volumeMounts := whsvr.sidecarConfig.Containers[0].VolumeMounts
-	//glog.Infof("VolumeMounts ===== %s", volumeMounts)
-	//rawVolumeMounts := pod.Spec.Containers[0].VolumeMounts
-	//pod.Spec.Containers[0].VolumeMounts = append(rawVolumeMounts, volumeMounts...)
-	//glog.Infof("Pod ====== %v", pod)
+
 	glog.Infof("AdmissionReview for Kind=%v, Namespace=%v Name=%v (%v) UID=%v patchOperation=%v UserInfo=%v",
 		req.Kind, req.Namespace, req.Name, pod.Name, req.UID, req.Operation, req.UserInfo)
 
