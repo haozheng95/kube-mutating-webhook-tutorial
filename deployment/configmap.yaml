@@ -37,7 +37,7 @@ data:
         mountPath: /bitfusion/usr/lib/x86_64-linux-gnu/
       - name: sys-x86-64
         mountPath: /bitfusion/systemlib/x86_64-linux-gnu/
-      - name: loc-x86_64
+      - name: loc-x86-64
         mountPath: /bitfusion/usr/local/lib/x86_64-linux-gnu/
       - name: opt-lib
         mountPath: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/
