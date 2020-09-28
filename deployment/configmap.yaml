@@ -27,19 +27,19 @@ data:
         mountPath: /etc/security
       - name: share
         mountPath: /usr/share/bitfusion/
-      - name: x86_64
+      - name: x86-64
         mountPath: /bitfusion/lib/x86_64-linux-gnu
       - name: root
         mountPath: /root/.bitfusion/
       - name: etc
         mountPath: /etc/bitfusion
-      - name: usr_x86_64
+      - name: usr-x86-64
         mountPath: /bitfusion/usr/lib/x86_64-linux-gnu/
-      - name: sys_x86_64
+      - name: sys-x86-64
         mountPath: /bitfusion/systemlib/x86_64-linux-gnu/
-      - name: loc_x86_64
+      - name: loc-x86_64
         mountPath: /bitfusion/usr/local/lib/x86_64-linux-gnu/
-      - name: opt_lib
+      - name: opt-lib
         mountPath: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/
     volumes:
     - name: nginx-conf
@@ -60,7 +60,7 @@ data:
     - name: share
       hostPath:
         path: /usr/share/bitfusion/
-    - name: x86_64
+    - name: x86-64
       hostPath:
         path: /lib/x86_64-linux-gnu
     - name: root
@@ -69,15 +69,15 @@ data:
     - name: etc
       hostPath:
         path: /etc/bitfusion
-    - name: usr_x86_64
+    - name: usr-x86-64
       hostPath:
         path: /usr/lib/x86_64-linux-gnu/
-    - name: sys_x86_64
+    - name: sys-x86-64
       hostPath:
         path: /lib/x86_64-linux-gnu/
-    - name: loc_x86_64
+    - name: loc-x86-64
       hostPath:
         path: /usr/local/lib/x86_64-linux-gnu/
-    - name: opt_lib
+    - name: opt-lib
       hostPath:
         path: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/
