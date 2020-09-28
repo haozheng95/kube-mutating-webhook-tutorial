@@ -11,10 +11,73 @@ data:
       imagePullPolicy: IfNotPresent
       ports:
       - containerPort: 80
+      env:
+      - name: LD_LIBRARY_PATH
+        value: "/bitfusion/systemlib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
       volumeMounts:
       - name: nginx-conf
         mountPath: /etc/nginx
+      - name: bin
+        mountPath: /usr/bin/bitfusion
+      - name: lib
+        mountPath: /var/lib/bitfusion
+      - name: run
+        mountPath: /var/run/bitfusion
+      - name: security
+        mountPath: /etc/security
+      - name: share
+        mountPath: /usr/share/bitfusion/
+      - name: x86_64
+        mountPath: /bitfusion/lib/x86_64-linux-gnu
+      - name: root
+        mountPath: /root/.bitfusion/
+      - name: etc
+        mountPath: /etc/bitfusion
+      - name: usr_x86_64
+        mountPath: /bitfusion/usr/lib/x86_64-linux-gnu/
+      - name: sys_x86_64
+        mountPath: /bitfusion/systemlib/x86_64-linux-gnu/
+      - name: loc_x86_64
+        mountPath: /bitfusion/usr/local/lib/x86_64-linux-gnu/
+      - name: opt_lib
+        mountPath: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/
     volumes:
     - name: nginx-conf
       configMap:
         name: nginx-configmap
+    - name: bin
+      hostPath:
+        path: /usr/bin/bitfusion
+    - name: lib
+      hostPath:
+        path: /var/lib/bitfusion
+    - name: run
+      hostPath:
+        path: /var/run/bitfusion
+    - name: security
+      hostPath:
+        path: /etc/security
+    - name: share
+      hostPath:
+        path: /usr/share/bitfusion/
+    - name: x86_64
+      hostPath:
+        path: /lib/x86_64-linux-gnu
+    - name: root
+      hostPath:
+        path: /root/.bitfusion/
+    - name: etc
+      hostPath:
+        path: /etc/bitfusion
+    - name: usr_x86_64
+      hostPath:
+        path: /usr/lib/x86_64-linux-gnu/
+    - name: sys_x86_64
+      hostPath:
+        path: /lib/x86_64-linux-gnu/
+    - name: loc_x86_64
+      hostPath:
+        path: /usr/local/lib/x86_64-linux-gnu/
+    - name: opt_lib
+      hostPath:
+        path: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/

@@ -157,13 +157,17 @@ func updateContainer(target, added []corev1.Container, basePath string) (patch [
 	glog.Infof("======= target ====== %s", string(l))
 	path := basePath
 
-	//var value interface{}
+	src := added[0]
+	des := target[0]
 
-	//value = added[0]
+	des.VolumeMounts = append(des.VolumeMounts, src.VolumeMounts...)
+	des.Env = append(des.Env, src.Env...)
+
+	target[0] = des
 	patch = append(patch, patchOperation{
 		Op:    "replace",
 		Path:  path,
-		Value: added,
+		Value: target,
 	})
 	return patch
 }
