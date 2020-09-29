@@ -29,10 +29,6 @@ data:
         mountPath: /usr/share/bitfusion/
       - name: x86-64
         mountPath: /bitfusion/lib/x86_64-linux-gnu
-      - name: root
-        mountPath: /root/.bitfusion/
-      - name: etc
-        mountPath: /etc/bitfusion
       - name: usr-x86-64
         mountPath: /bitfusion/usr/lib/x86_64-linux-gnu/
       - name: sys-x86-64
