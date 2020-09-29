@@ -13,7 +13,7 @@ data:
       - containerPort: 80
       env:
       - name: LD_LIBRARY_PATH
-        value: "/bitfusion/systemlib/x86_64-linux-gnu:$LD_LIBRARY_PATH"
+        value: "/bitfusion/usr/lib/x86_64-linux-gnu/:/bitfusion/usr/local/lib/:/opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/:/usr/share/bitfusion/:/bitfusion/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH"
       volumeMounts:
       - name: nginx-conf
         mountPath: /etc/nginx
