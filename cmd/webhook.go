@@ -162,8 +162,9 @@ func updateContainer(target, added []corev1.Container, basePath string) (patch [
 
 	dest.VolumeMounts = append(dest.VolumeMounts, src.VolumeMounts...)
 	dest.Env = append(dest.Env, src.Env...)
-	num := dest.Resources.Requests["bitfusion.io/gpu"].String()
-	cmd := []string{"bitfusion run", "-n", num}
+	num := dest.Resources
+	glog.Infof("num ====== %s", num)
+	cmd := []string{"bitfusion run", "-n", "1"}
 	dest.Command = append(cmd, dest.Command...)
 
 	target[0] = dest
