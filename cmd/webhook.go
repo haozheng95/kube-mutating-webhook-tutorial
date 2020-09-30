@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/ghodss/yaml"
@@ -165,7 +166,7 @@ func updateContainer(target, added []corev1.Container, basePath string) (patch [
 	req := dest.Resources.Requests["bitfusion.io/gpu"]
 	num, _ := req.AsInt64()
 	glog.Infof("num ====== %v", num)
-	cmd := []string{"/bin/bash", "-c", "bitfusion run -n " + fmt.Sprintf("%s", num)}
+	cmd := []string{"/bin/bash", "-c", "bitfusion run -n " + strconv.FormatInt(num, 10)}
 	dest.Command = append(cmd, dest.Command...)
 
 	target[0] = dest
