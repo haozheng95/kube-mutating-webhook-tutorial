@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    sidecar-injector-webhook.morven.me/inject: "yes"
+  labels:
+    run: alpine
+  name: alpine
+  namespace: injection
+spec:
+  containers:
+    - image: nvcr.io/nvidia/tensorflow:19.07-py3
+      imagePullPolicy: IfNotPresent
+      name: alpine
+      command: ["python /benchmark/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --local_parameter_device=gpu --batch_size=32 --model=inception3"]
+      resources:
+        limits:
+          bitfusion.io/gpu: 1
+      volumeMounts:
+        - name: code
+          mountPath: /benchmark
+  volumes:
+    - name: code
+      hostPath:
+        path: /home/vmware/benchmarks
