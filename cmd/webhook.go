@@ -170,7 +170,9 @@ func updateContainer(target, added []corev1.Container, basePath string) (patch [
 
 		str := "bitfusion run -n " + strconv.FormatInt(num, 10)
 		for _, v := range dest.Command {
-			str += " " + v
+			if strings.ToLower(v) != "bitfusion" {
+				str += " " + v
+			}
 		}
 		cmd := []string{"/bin/bash", "-c", str}
 		dest.Command = cmd
