@@ -17,7 +17,7 @@ data:
             cp -a /usr/lib/x86_64-linux-gnu/ /x86-usr-lib &&
             cp -a /lib/x86_64-linux-gnu/  /x86-lib &&
             cp -a /lib/x86_64-linux-gnu/  /x86-lib-sys &&
-            cp -a /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/ /opt-bitfusion
+            cp -a /opt/bitfusion/ /opt-bitfusion
             "]
       volumeMounts:
       - name: bitfusion-usr-bin
@@ -64,7 +64,7 @@ data:
       - name: usr-local
         mountPath: /bitfusion/usr/local/lib/
       - name: opt-bitfusion
-        mountPath: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/
+        mountPath: /opt/
     volumes:
     - name: nginx-conf
       configMap:
