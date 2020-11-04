@@ -5,75 +5,85 @@ metadata:
   namespace: sidecar-injector
 data:
   sidecarconfig.yaml: |
+    initContainers:
+    - name: populate
+      image: harbor-repo.vmware.com/bitfusion_device_plugin/bitfusion-cli:v0.1
+      command: [/bin/bash, -c, "
+            cp /usr/bin/bitfusion /bitfusion-usr-bin &&
+            cp -a /var/lib/bitfusion /bitfusion-var-lib &&
+            cp -a /var/run/bitfusion /bitfusion-var-run &&
+            cp -a /etc/security /etc-security &&
+            cp -a /usr/share/bitfusion/  /bitfusion-usr-share &&
+            cp -a /usr/lib/x86_64-linux-gnu/ /x86-usr-lib &&
+            cp -a /lib/x86_64-linux-gnu/  /x86-lib &&
+            cp -a /lib/x86_64-linux-gnu/  /x86-lib-sys &&
+            cp -a /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/ /opt-bitfusion
+            "]
+      volumeMounts:
+      - name: bitfusion-usr-bin
+        mountPath: /bitfusion-usr-bin
+      - name: bitfusion-var-lib
+        mountPath: /bitfusion-var-lib
+      - name: bitfusion-var-run
+        mountPath: /bitfusion-var-run
+      - name: bitfusion-usr-share
+        mountPath: /bitfusion-usr-share
+      - name: x86-usr-lib
+        mountPath: /x86-usr-lib
+      - name: x86-lib
+        mountPath: /x86-lib
+      - name: x86-lib-sys
+        mountPath: /x86-lib-sys
+      - name: usr-local
+        mountPath: /usr-local
+      - name: opt-bitfusion
+        mountPath: /opt-bitfusion
     containers:
-    - name: sidecar-nginx
-      image: nginx:1.12.2
-      imagePullPolicy: IfNotPresent
-      ports:
-      - containerPort: 80
+    - name: sidecar-container
+      image: container
       env:
       - name: LD_LIBRARY_PATH
         value: "/bitfusion/usr/lib/x86_64-linux-gnu/:/bitfusion/usr/local/lib/:/opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/:/usr/share/bitfusion/:/bitfusion/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH"
       volumeMounts:
       - name: nginx-conf
         mountPath: /etc/nginx
-      - name: bin
+      - name: bitfusion-usr-bin
         mountPath: /usr/bin/bitfusion
-      - name: lib
-        mountPath: /var/lib/bitfusion
-      - name: run
-        mountPath: /var/run/bitfusion
-      - name: security
-        mountPath: /etc/security
-      - name: share
-        mountPath: /usr/share/bitfusion/
-      - name: x86-64
-        mountPath: /bitfusion/lib/x86_64-linux-gnu
-      - name: usr-x86-64
-        mountPath: /bitfusion/usr/lib/x86_64-linux-gnu/
-      - name: sys-x86-64
-        mountPath: /bitfusion/systemlib/x86_64-linux-gnu/
-      - name: loc-x86-64
-        mountPath: /bitfusion/usr/local/lib/x86_64-linux-gnu/
-      - name: opt-lib
-        mountPath: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/
+      - name: bitfusion-var-lib
+        mountPath: /var/lib
+      - name: bitfusion-var-run
+        mountPath: /var/run
+      - name: bitfusion-usr-share
+        mountPath: /usr/share/
+      - name: x86-usr-lib
+        mountPath: /bitfusion/usr/lib/
+      - name: x86-lib
+        mountPath: /bitfusion/lib/
+      - name: x86-lib-sys
+        mountPath: /bitfusion/systemlib/
+      - name: usr-local
+        mountPath: /bitfusion/usr/local/lib/
+      - name: opt-bitfusion
+        mountPath: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/
     volumes:
     - name: nginx-conf
       configMap:
         name: nginx-configmap
-    - name: bin
-      hostPath:
-        path: /usr/bin/bitfusion
-    - name: lib
-      hostPath:
-        path: /var/lib/bitfusion
-    - name: run
-      hostPath:
-        path: /var/run/bitfusion
-    - name: security
-      hostPath:
-        path: /etc/security
-    - name: share
-      hostPath:
-        path: /usr/share/bitfusion/
-    - name: x86-64
-      hostPath:
-        path: /lib/x86_64-linux-gnu
-    - name: root
-      hostPath:
-        path: /root/.bitfusion/
-    - name: etc
-      hostPath:
-        path: /etc/bitfusion
-    - name: usr-x86-64
-      hostPath:
-        path: /usr/lib/x86_64-linux-gnu/
-    - name: sys-x86-64
-      hostPath:
-        path: /lib/x86_64-linux-gnu/
-    - name: loc-x86-64
-      hostPath:
-        path: /usr/local/lib/x86_64-linux-gnu/
-    - name: opt-lib
-      hostPath:
-        path: /opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/
+    - name: bitfusion-usr-bin
+      emptyDir: {}
+    - name: bitfusion-var-lib
+      emptyDir: {}
+    - name: bitfusion-var-run
+      emptyDir: {}
+    - name: bitfusion-usr-share
+      emptyDir: {}
+    - name: x86-usr-lib
+      emptyDir: {}
+    - name: x86-lib
+      emptyDir: {}
+    - name: x86-lib-sys
+      emptyDir: {}
+    - name: usr-local
+      emptyDir: {}
+    - name: opt-bitfusion
+      emptyDir: {}

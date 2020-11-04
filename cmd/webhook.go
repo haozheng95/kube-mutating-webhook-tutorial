@@ -53,8 +53,9 @@ type WhSvrParameters struct {
 }
 
 type Config struct {
-	Containers []corev1.Container `yaml:"containers"`
-	Volumes    []corev1.Volume    `yaml:"volumes"`
+	InitContainers []corev1.Container `yaml:"initContainers"`
+	Containers     []corev1.Container `yaml:"containers"`
+	Volumes        []corev1.Volume    `yaml:"volumes"`
 }
 
 type patchOperation struct {
@@ -168,7 +169,7 @@ func updateContainer(target, added []corev1.Container, basePath string) (patch [
 		num, _ := req.AsInt64()
 		glog.Infof("num ====== %v", num)
 
-		str := "bitfusion run -n " + strconv.FormatInt(num, 10)
+		str := "/usr/bin/bitfusion/bitfusion run -n " + strconv.FormatInt(num, 10)
 		for _, v := range dest.Command {
 			if strings.ToLower(v) != "bitfusion" {
 				str += " " + v
@@ -234,7 +235,7 @@ func updateAnnotation(target map[string]string, added map[string]string) (patch 
 func createPatch(pod *corev1.Pod, sidecarConfig *Config, annotations map[string]string) ([]byte, error) {
 	var patch []patchOperation
 
-	//patch = append(patch, addContainer(pod.Spec.Containers, sidecarConfig.Containers, "/spec/containers")...)
+	patch = append(patch, addContainer(pod.Spec.Containers, sidecarConfig.InitContainers, "/spec/initContainers")...)
 	patch = append(patch, addVolume(pod.Spec.Volumes, sidecarConfig.Volumes, "/spec/volumes")...)
 	patch = append(patch, updateAnnotation(pod.Annotations, annotations)...)
 
