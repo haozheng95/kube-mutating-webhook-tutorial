@@ -7,83 +7,26 @@ data:
   sidecarconfig.yaml: |
     initContainers:
     - name: populate
-      image: harbor-repo.vmware.com/bitfusion_device_plugin/bitfusion-client-ubuntu1804_2.5.0-10_amd64:v0.1
+      image: harbor-repo.vmware.com/bitfusion_device_plugin/bf_pkgs:v0.3
       command: [/bin/bash, -c, "
-            cp /usr/bin/bitfusion /bitfusion-usr-bin &&
-            cp -a /var/lib/bitfusion /bitfusion-var-lib &&
-            cp -a /var/run/bitfusion /bitfusion-var-run &&
-            cp -a /etc/security /etc-security &&
-            cp -a /usr/share/bitfusion/  /bitfusion-usr-share &&
-            cp -a /usr/lib/x86_64-linux-gnu/ /x86-usr-lib &&
-            cp -a /lib/x86_64-linux-gnu/  /x86-lib &&
-            cp -a /lib/x86_64-linux-gnu/  /x86-lib-sys &&
-            cp -a /opt/bitfusion/ /opt-bitfusion
+            cp /dispatch.sh /space/BFdispatch &&
+            cp -a /BFpkgs /space/BFpkgs
             "]
       volumeMounts:
-      - name: bitfusion-usr-bin
-        mountPath: /bitfusion-usr-bin
-      - name: bitfusion-var-lib
-        mountPath: /bitfusion-var-lib
-      - name: bitfusion-var-run
-        mountPath: /bitfusion-var-run
-      - name: bitfusion-usr-share
-        mountPath: /bitfusion-usr-share
-      - name: x86-usr-lib
-        mountPath: /x86-usr-lib
-      - name: x86-lib
-        mountPath: /x86-lib
-      - name: x86-lib-sys
-        mountPath: /x86-lib-sys
-      - name: usr-local
-        mountPath: /usr-local
-      - name: opt-bitfusion
-        mountPath: /opt-bitfusion
+      - name: BFpkgs
+        mountPath: /space/BFpkgs
+      - name: BFdispatch
+        mountPath: /space/BFdispatch
     containers:
     - name: sidecar-container
       image: container
-      env:
-      - name: LD_LIBRARY_PATH
-        value: "/bitfusion/usr/lib/x86_64-linux-gnu/:/bitfusion/usr/local/lib/:/opt/bitfusion/lib/x86_64-linux-gnu/bitfusion/lib/:/usr/share/bitfusion/:/bitfusion/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH"
       volumeMounts:
-      - name: nginx-conf
-        mountPath: /etc/nginx
-      - name: bitfusion-usr-bin
-        mountPath: /usr/bin/bitfusion
-      - name: bitfusion-var-lib
-        mountPath: /var/lib
-      - name: bitfusion-var-run
-        mountPath: /var/run
-      - name: bitfusion-usr-share
-        mountPath: /usr/share/
-      - name: x86-usr-lib
-        mountPath: /bitfusion/usr/lib/
-      - name: x86-lib
-        mountPath: /bitfusion/lib/
-      - name: x86-lib-sys
-        mountPath: /bitfusion/systemlib/
-      - name: usr-local
-        mountPath: /bitfusion/usr/local/lib/
-      - name: opt-bitfusion
-        mountPath: /opt/
+      - name: BFpkgs
+        mountPath: /BFpkgs
+      - name: BFdispatch
+        mountPath: /BFdispatch
     volumes:
-    - name: nginx-conf
-      configMap:
-        name: nginx-configmap
-    - name: bitfusion-usr-bin
+    - name: BFpkgs
       emptyDir: {}
-    - name: bitfusion-var-lib
-      emptyDir: {}
-    - name: bitfusion-var-run
-      emptyDir: {}
-    - name: bitfusion-usr-share
-      emptyDir: {}
-    - name: x86-usr-lib
-      emptyDir: {}
-    - name: x86-lib
-      emptyDir: {}
-    - name: x86-lib-sys
-      emptyDir: {}
-    - name: usr-local
-      emptyDir: {}
-    - name: opt-bitfusion
+    - name: BFdispatch
       emptyDir: {}
