@@ -170,7 +170,12 @@ func updateContainer(target, added []corev1.Container, basePath string) (patch [
 		glog.Infof("num ====== %v", num)
 
 		str := "/BFdispatch/dispatch.sh run -n " + strconv.FormatInt(num, 10)
-		cmd := []string{"/bin/bash", "-c", str}
+		for _, v := range dest.Command {
+			if strings.ToLower(v) != "bitfusion" {
+				str += " " + v
+			}
+		}
+		cmd := []string{"/bin/bash", "-c bash", str}
 		dest.Command = cmd
 	}
 
