@@ -13,20 +13,20 @@ data:
             cp -a /BFpkgs /space/BFpkgs
             "]
       volumeMounts:
-      - name: BFpkgs
+      - name: bfpkgs
         mountPath: /space/BFpkgs
-      - name: BFdispatch
+      - name: dispatch
         mountPath: /space/BFdispatch
     containers:
     - name: sidecar-container
       image: container
       volumeMounts:
-      - name: BFpkgs
+      - name: bfpkgs
         mountPath: /BFpkgs
-      - name: BFdispatch
+      - name: dispatch
         mountPath: /BFdispatch
     volumes:
-    - name: BFpkgs
+    - name: bfpkgs
       emptyDir: {}
-    - name: BFdispatch
+    - name: dispatch
       emptyDir: {}
