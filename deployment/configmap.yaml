@@ -22,7 +22,7 @@ data:
       image: container
       volumeMounts:
       - name: bfpkgs
-        mountPath: /BFpkgs
+        mountPath: /BFstore
       - name: dispatch
         mountPath: /BFdispatch
     volumes:
