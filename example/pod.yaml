@@ -3,19 +3,18 @@ kind: Pod
 metadata:
   annotations:
     sidecar-injector-webhook.morven.me/inject: "yes"
-  labels:
-    run: alpine
-  name: alpine
+  name: bf-pkgs
   namespace: injection
 spec:
   containers:
     - image: nvcr.io/nvidia/tensorflow:19.07-py3
       imagePullPolicy: IfNotPresent
-      name: alpine
+      name: bf-pkgs
       command: ["python /benchmark/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --local_parameter_device=gpu --batch_size=32 --model=inception3"]
       resources:
         limits:
-          bitfusion.io/gpu: 1
+          bitfusion.io/gpu-nums: 1
+          bitfusion.io/gpu-partial: 10
       volumeMounts:
         - name: code
           mountPath: /benchmark

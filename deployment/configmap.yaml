@@ -10,17 +10,25 @@ data:
       image: harbor-repo.vmware.com/bitfusion_device_plugin/bf_pkgs:v0.3
       command: [/bin/bash, -c, "
             cp /dispatch.sh /space/BFdispatch &&
-            cp -a /BFpkgs /space/BFpkgs
+            cp -a /BFpkgs /space/BFpkgs &&
+            cp /secretToken/* /token &&
+            chmod 600 /token/client.yaml
             "]
       volumeMounts:
       - name: bfpkgs
         mountPath: /space/BFpkgs
       - name: dispatch
         mountPath: /space/BFdispatch
+      - name: secret-token
+        mountPath: /secretToken
+      - token
+        mountPath: /token
     containers:
     - name: sidecar-container
       image: container
       volumeMounts:
+      - name: token
+        mounntPath: /etc/bitfusion/tls
       - name: bfpkgs
         mountPath: /BFstore
       - name: dispatch
@@ -30,3 +38,8 @@ data:
       emptyDir: {}
     - name: dispatch
       emptyDir: {}
+    - name: token
+      emptyDir: {}
+    - name: secret-token
+      secret:
+        secretName: bitfusion-secret
